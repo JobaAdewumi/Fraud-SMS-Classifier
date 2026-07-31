@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Scam Detector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8 flex justify-center items-start">
+    <div class="max-w-xl w-full bg-white rounded-lg shadow-md p-6 mt-10">
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">SMS Scam Detector 🇳🇬</h1>
+        
+        <textarea id="messageInput" class="w-full border rounded-md p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" placeholder="Paste SMS message here... (e.g., 'You have won 50,000 Naira')"></textarea>
+        
+        <button onclick="analyzeMessage()" class="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition">Analyze Message</button>
+
+        <!-- Results Section -->
+        <div id="results" class="mt-6 hidden">
+            <h2 class="text-lg font-semibold border-b pb-2 mb-3">Analysis Results</h2>
+            
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-gray-600 font-medium">Verdict:</span>
+                <span id="verdictLabel" class="px-3 py-1 rounded-full text-sm font-bold"></span>
+            </div>
+            
+            <div class="mb-5 bg-gray-50 p-3 rounded border">
+                <span class="text-gray-700 text-sm font-semibold">Evaluation Metrics:</span>
+                <div class="flex justify-between text-sm mt-2">
+                    <span class="text-green-700 font-medium">Safe Probability: <span id="safeProb"></span>%</span>
+                    <span class="text-red-700 font-medium">Fraud Probability: <span id="fraudProb"></span>%</span>
+                </div>
+            </div>
+
+            <div class="border-t pt-4">
+                <span class="text-gray-700 text-sm font-semibold">Keyword Insights (Fraud Weight):</span>
+                <p class="text-xs text-gray-500 mb-2 mt-1">Words that pushed the model toward a "Fraudulent" prediction.</p>
+                <div id="keywordTags" class="flex flex-wrap gap-2 mt-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function analyzeMessage() {
+            const text = document.getElementById('messageInput').value;
+            if (!text) return alert("Please enter a message to analyze.");
+
+            // Call the FastAPI Endpoint
+            const response = await fetch('/api/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+            
+            const data = await response.json();
+            
+            // Unhide results container
+            document.getElementById('results').classList.remove('hidden');
+            
+            // Populate Verdict
+            const badge = document.getElementById('verdictLabel');
+            badge.innerText = data.label;
+            badge.className = `px-3 py-1 rounded-full text-sm font-bold ${data.label === 'Fraudulent' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
+            
+            // Populate Metrics
+            document.getElementById('safeProb').innerText = data.safe_probability;
+            document.getElementById('fraudProb').innerText = data.fraud_probability;
+
+            // Render Keyword Tags based on positive weights
+            const tagsContainer = document.getElementById('keywordTags');
+            tagsContainer.innerHTML = '';
+            
+            let hasFraudKeywords = false;
+            for (const [word, weight] of Object.entries(data.keyword_insights)) {
+                if (weight > 0.1) { // Filter out negligible weights
+                    hasFraudKeywords = true;
+                    const tag = document.createElement('span');
+                    tag.className = 'px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-md border border-yellow-300 shadow-sm';
+                    tag.innerText = `${word} (${weight.toFixed(2)})`;
+                    tagsContainer.appendChild(tag);
+                }
+            }
+            
+            if (!hasFraudKeywords) {
+                 tagsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">No strong fraud keywords detected.</span>';
+            }
+        }
+    </script>
+</body>
+</html>
