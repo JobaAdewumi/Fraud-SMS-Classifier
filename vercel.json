@@ -17,6 +17,10 @@
     {
       "source": "/api/(.*)",
       "destination": "/app.py"
+    },
+    {
+      "source": "/logo-white.png",
+      "destination": "/app.py"
     }
   ]
 }

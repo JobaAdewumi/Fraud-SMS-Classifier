@@ -1,5 +1,5 @@
-# import os
-# from fastapi.responses import FileResponse
+import os
+from fastapi.responses import FileResponse
 import joblib
 import re
 from fastapi import FastAPI, HTTPException
@@ -70,6 +70,13 @@ async def predict_sms(request: MessageRequest):
         safe_probability=round(safe_prob * 100, 2),
         keyword_insights=sorted_insights
     )
+
+@app.get("/logo-white.png")
+async def get_logo():
+    logo_path = os.path.join(os.path.dirname(__file__), "logo-white.png")
+    if os.path.exists(logo_path):
+        return FileResponse(logo_path)
+    raise HTTPException(status_code=404, detail="Logo not found")
 
 # Mount Frontend
 # app.mount("/", StaticFiles(directory="static", html=True), name="static")
