@@ -94,5 +94,5 @@ async def predict_sms(request: MessageRequest):
 #         return FileResponse(file_path)
 #     raise HTTPException(status_code=404, detail="File not found")
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
