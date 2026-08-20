@@ -81,25 +81,5 @@ async def get_logo():
 # Mount Frontend
 # app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
-# Build absolute paths for Vercel's environment
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# STATIC_DIR = os.path.join(BASE_DIR, "static")
-
-# @app.get("/")
-# async def serve_frontend():
-#     """Serves the main HTML interface."""
-#     index_path = os.path.join(STATIC_DIR, "index.html")
-#     if not os.path.exists(index_path):
-#         raise HTTPException(status_code=404, detail="Frontend not found")
-#     return FileResponse(index_path)
-
-# @app.get("/{filename}")
-# async def serve_static_assets(filename: str):
-#     """Serves static assets."""
-#     file_path = os.path.join(STATIC_DIR, filename)
-#     if os.path.exists(file_path):
-#         return FileResponse(file_path)
-#     raise HTTPException(status_code=404, detail="File not found")
-
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="0.0.0.0", port=8000)
