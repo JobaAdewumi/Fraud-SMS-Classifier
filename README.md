@@ -36,8 +36,8 @@ sms-scam-detector/
 1. Clone the repository:
 
 ```bash
-git clone [https://github.com/yourusername/sms-scam-detector.git](https://github.com/yourusername/sms-scam-detector.git)
-cd sms-scam-detector
+git clone [https://github.com/JobaAdewumi/Fraud-SMS-Classifier.git](https://github.com/JobaAdewumi/Fraud-SMS-Classifier.git)
+cd Fraud-SMS-Classifier
 ```
 2. Create and activate a virtual environment (Recommended):
 
