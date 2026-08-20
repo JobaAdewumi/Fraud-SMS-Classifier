@@ -6,29 +6,7 @@ from pydantic import BaseModel
 from sklearn.base import BaseEstimator, TransformerMixin
 import uvicorn
 
-# Define the Custom Cleaner (MUST match the notebook exactly)
-class SMSTextCleaner(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.patterns = [
-            (r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', ' __URL__ '),
-            (r'(?:\+?234|0)[789][01]\d{8}', ' __PHONE__ '),
-            (r'\b\d{10}\b', ' __ACCOUNT_NUM__ '),
-            (r'(?:N|₦)?\d+(?:,\d+)*(?:\.\d+)?(?:k|m|b|\s*naira)?', ' __MONEY__ '),
-            (r'\*\d+(?:\*\d+)*#', ' __USSD__ ')
-        ]
-
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, X, y=None):
-        cleaned_X = []
-        for text in X:
-            text = str(text).lower()
-            for pattern, replacement in self.patterns:
-                text = re.sub(pattern, replacement, text)
-            text = re.sub(r'\s+', ' ', text).strip()
-            cleaned_X.append(text)
-        return cleaned_X
+from utils import SMSTextCleaner
 
 # Initialize Application
 app = FastAPI(title="Nigerian SMS Fraud Classifier API")
