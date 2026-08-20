@@ -23,8 +23,12 @@ sms-scam-detector/
 ├── model_training.ipynb    # Jupyter notebook for EDA, training, and evaluation
 ├── sms_fraud_model.joblib  # Serialized scikit-learn model pipeline
 ├── README.md               # Project documentation
-└── static/
-    └── index.html          # Frontend user interface
+├── index.html              # Frontend user interface
+├── logo-white.png          # Logo
+├── SMS-SPAM-DATA.csv       # Model dataset
+├── utils.py                # Utility file for data cleaning
+├── Procfile                # Config file for railway deployment
+├── vercel.json             # Config file for vercel deployment
 ```
 
 ## Getting Started
